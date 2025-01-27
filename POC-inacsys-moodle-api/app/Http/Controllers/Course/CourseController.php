@@ -36,5 +36,25 @@ class CourseController extends Controller
         $rest->request('core_course_create_courses', $new_course, MoodleRest::METHOD_POST);
     }
 
-    public function get() {}
+    public function get_all() {
+        $rest = new MoodleRest(env('MOODLE_API_URL'), env('MOODLE_API_TOKEN'));
+        $courses = $rest->request('core_course_get_courses');
+
+        return response()->json($courses);
+    }
+
+    public function get_by_id(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'ids' => 'required|array|integer|min_length:1',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $rest = new MoodleRest(env('MOODLE_API_URL'), env('MOODLE_API_TOKEN'));
+        $courses = $rest->request('core_course_get_courses', ['ids' => $request['ids']]);
+
+        return response()->json($courses);
+    }
 }
