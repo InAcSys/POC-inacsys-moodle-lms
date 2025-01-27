@@ -18,8 +18,7 @@ class CourseController extends Controller
             'category_id' => 'required|integer',
         ]);
 
-        if ($validator->fails())
-        {
+        if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
@@ -36,4 +35,6 @@ class CourseController extends Controller
         $rest = new MoodleRest(env('MOODLE_API_URL'), env('MOODLE_API_TOKEN'));
         $rest->request('core_course_create_courses', $new_course, MoodleRest::METHOD_POST);
     }
+
+    public function get() {}
 }
