@@ -1,0 +1,58 @@
+version: "3.3"
+
+services:
+  postgres:
+    image: postgres
+    container_name: inacsys-lms-db
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+      POSTGRES_DB: "${DB_DB}"
+      POSTGRES_USER: "${DB_USER}"
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - inacsys-lms-net
+
+  mariadb:
+    image: bitnami/mariadb:latest
+    container_name: moodle-db
+    ports:
+      - "3306:3306"
+    environment:
+      ALLOW_EMPTY_PASSWORD: yes
+      MARIADB_USER: "${MARIADB_USER}"
+      MARIADB_PASSWORD: "${MARIADB_PASS}"
+      MARIADB_DATABASE: "${MARIADB_DB}"
+    volumes:
+      - ./moodle_db:/var/lib/mysql
+    networks:
+      - inacsys-lms-net
+
+  moodle:
+    image: bitnami/moodle:latest
+    container_name: moodle
+    ports:
+      - "8200:8080"
+      - "8443:8443"
+    environment:
+      ALLOW_EMPTY_PASSWORD: yes
+      MOODLE_DATABASE_USER: "${MARIADB_USER}"
+      MOODLE_DATABASE_PASSWORD: "${MARIADB_PASS}"
+      MOODLE_DATABASE_NAME: "${MARIADB_DB}"
+      MOODLE_USERNAME: "${MOODLE_USER}"
+      MOODLE_PASSWORD: "${MOODLE_PASS}"
+    volumes:
+      - ./moodle_data:/bitnami/moodle
+      - ./moodledata_data:/bitnami/moodledata
+    depends_on:
+      - mariadb
+    networks:
+      - inacsys-lms-net
+
+volumes:
+  db_data:
+networks:
+  inacsys-lms-net:

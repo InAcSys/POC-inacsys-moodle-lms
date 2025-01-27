@@ -1,0 +1,17 @@
+{
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "MariaDB",
+            "database": "inacsys_moodle_maria_db",
+            "name": "inacsys_moodle_maria_db",
+            "username": "inacsys_moodle_maria_db_root"
+        }
+    ]
+}
